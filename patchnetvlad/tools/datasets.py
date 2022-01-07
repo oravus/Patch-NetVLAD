@@ -79,10 +79,14 @@ class PlaceDataset(data.Dataset):
         self.distances = None
 
         self.resize = (int(config['imageresizeH']), int(config['imageresizeW']))
+        self.croph = None
+        if 'imagecroph' in config:
+            self.croph = int(config['imagecroph'])
         self.mytransform = input_transform(self.resize)
 
     def __getitem__(self, index):
         img = Image.open(self.images[index])
+        if self.croph is not None: img = img.crop((0,0,img.size[0],self.croph))
         img = self.mytransform(img)
 
         return img, index

@@ -56,6 +56,9 @@ def feature_extract(eval_set, model, device, opt, config):
 
     output_local_features_prefix = join(opt.output_features_dir, 'patchfeats')
     output_global_features_filename = join(opt.output_features_dir, 'globalfeats.npy')
+    if opt.output_features_fullpath is not None:
+        output_global_features_filename = opt.output_features_fullpath
+        makedirs(os.path.dirname(output_global_features_filename),exist_ok=True)
 
     pool_size = int(config['global_params']['num_pcs'])
 
@@ -111,6 +114,7 @@ def main():
                         help='If the files in dataset_file_path are relative, use dataset_root_dir as prefix.')
     parser.add_argument('--output_features_dir', type=str, default=join(PATCHNETVLAD_ROOT_DIR, 'output_features'),
                         help='Path to store all patch-netvlad features')
+    parser.add_argument('--output_features_fullpath', type=str, help='Path to store global features as full path')
     parser.add_argument('--nocuda', action='store_true', help='If true, use CPU only. Else use GPU.')
 
     opt = parser.parse_args()
